@@ -1,5 +1,6 @@
 package com.example.s18g2.exceptions;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, exception.getHttpStatus());
 
     }
+
+    @ExceptionHandler
+    public ResponseEntity<PlantErrorResponse> handleException(ConstraintViolationException exception){
+        log.error("Exception", exception);
+        PlantErrorResponse response = new PlantErrorResponse (exception.getMessage(), HttpStatus.BAD_REQUEST.value(), System.currentTimeMillis());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler
     public ResponseEntity<PlantErrorResponse> handleException(Exception exception){
